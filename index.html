@@ -1,58 +1,64 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>音声だけYouTubeボタン（安定版）</title>
+<meta charset="UTF-8">
+<title>YouTube音声ボタン</title>
+<style>
+button {
+  font-size: 18px;
+  margin: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+</style>
 </head>
 <body>
 
+<h2>YouTube音声ボタン（秒数指定）</h2>
+
+<!-- ボタン -->
 <button onclick="playAudio()">▶ 再生（56秒から）</button>
 <button onclick="stopAudio()">■ 停止</button>
 
-<div id="player" style="
-  position:absolute;
-  left:-9999px;
-  width:1px;
-  height:1px;
-"></div>
+<!-- プレイヤー（画面外に配置） -->
+<div id="player" style="position:absolute; left:-9999px; width:1px; height:1px;"></div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 let player;
-const START_TIME = 56;
+const VIDEO_ID = 'PNMZdHr3MTA'; // 再生したいYouTube動画ID
+const START_TIME = 56; // 再生開始秒数
 
+// YouTube IFrame API読み込み後に呼ばれる
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
-    videoId: 'PNMZdHr3MTA',
+    videoId: VIDEO_ID,
     playerVars: {
-      controls: 0
+      autoplay: 0,
+      controls: 0,
+      modestbranding: 1,
+      rel: 0
     },
-    events: {
-      onReady: onPlayerReady
-    }
+    events: { onReady: onPlayerReady }
   });
 }
 
+// プレイヤー準備完了時
 function onPlayerReady() {
-  // 明示的に音を有効化
-  player.unMute();
-  player.setVolume(100);
+  player.unMute();       // ミュート解除
+  player.setVolume(100); // 音量100%
 }
 
+// 再生ボタン
 function playAudio() {
   if (!player) return;
-
-  player.unMute();        // ★超重要
-  player.setVolume(100);  // ★超重要
-  player.stopVideo();
-  player.seekTo(START_TIME, true);
+  player.seekTo(START_TIME, true); // 秒数指定
   player.playVideo();
 }
 
+// 停止ボタン
 function stopAudio() {
-  if (player) {
-    player.stopVideo();
-  }
+  if (player) player.stopVideo();
 }
 </script>
 
