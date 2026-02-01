@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>音声だけYouTubeボタン（安定版）</title>
+</head>
+<body>
+
+<button onclick="playAudio()">▶ 再生（56秒から）</button>
+<button onclick="stopAudio()">■ 停止</button>
+
+<div id="player" style="
+  position:absolute;
+  left:-9999px;
+  width:1px;
+  height:1px;
+"></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+let player;
+const START_TIME = 56;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    videoId: 'PNMZdHr3MTA',
+    playerVars: {
+      controls: 0
+    },
+    events: {
+      onReady: onPlayerReady
+    }
+  });
+}
+
+function onPlayerReady() {
+  // 明示的に音を有効化
+  player.unMute();
+  player.setVolume(100);
+}
+
+function playAudio() {
+  if (!player) return;
+
+  player.unMute();        // ★超重要
+  player.setVolume(100);  // ★超重要
+  player.stopVideo();
+  player.seekTo(START_TIME, true);
+  player.playVideo();
+}
+
+function stopAudio() {
+  if (player) {
+    player.stopVideo();
+  }
+}
+</script>
+
+</body>
+</html>
